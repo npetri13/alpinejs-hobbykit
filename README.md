@@ -1,4 +1,5 @@
 # AlpineJS Hobby Kit
+![License](https://img.shields.io/npm/l/@npetri/alpinejs-hobbykit?style=for-the-badge) ![Version](https://img.shields.io/npm/v/@npetri/alpinejs-hobbykit?style=for-the-badge)
 
 An **AlpineJS Plugin** with some useful extension.
 

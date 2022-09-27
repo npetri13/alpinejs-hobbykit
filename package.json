@@ -1,17 +1,25 @@
 {
-  "name": "@victoryoalli/alpinejs-plugin-blueprint",
+  "name": "@npetri/alpinejs-hobbykit",
   "version": "1.0.0",
-  "description": "Super alpine.js plugin",
+  "description": "An alpine package with some useful extensions.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/plugin.esm.js",
   "unpkg": "dist/plugin.min.js",
-  "keywords": [],
-  "author": "Victor Yoalli",
+  "keywords": [
+    "javascript",
+    "alpinejs",
+    "plugin"
+  ],
+  "author": "Nico Petri",
   "license": "MIT",
   "dependencies": {
     "esbuild": "^0.12.22"
   },
   "scripts": {
     "build": "node scripts/build.js"
+  },
+  "devDependencies": {
+    "lodash": "^4.17.21",
+    "lodash-contrib": "^4.1200.1"
   }
 }

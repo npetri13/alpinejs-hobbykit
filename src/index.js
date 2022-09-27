@@ -1,11 +1,21 @@
-const Plugin = function (Alpine) {
-    Alpine.directive('plugin', (el, obj, { evaluateLater, effect, cleanup }) => {
-        let { value, expression, modifiers } = obj;
-        let evaluate = evaluateLater(expression);
+import { AlpineTimeout } from './timeout'
+import { AlpineInterval } from './interval'
+import { AlpineLog } from './log'
+import { AlpineScroll } from './scroll'
+import { AlpineWrap } from './wrap'
 
-        cleanup(() => observer.disconnect())
-    })
-    Alpine.magic('magic',() => { return 'magic' })
+export default function (Alpine) {
+  Alpine.directive('timeout', AlpineTimeout)
+  Alpine.directive('interval', AlpineInterval)
+  Alpine.directive('log', AlpineLog)
+  Alpine.directive('scroll', AlpineScroll)
+  Alpine.directive('wrap', AlpineWrap)
 }
 
-export default  Plugin
+export {
+  AlpineTimeout,
+  AlpineInterval,
+  AlpineLog,
+  AlpineScroll,
+  AlpineWrap
+}

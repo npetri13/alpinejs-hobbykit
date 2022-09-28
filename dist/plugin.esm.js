@@ -162,10 +162,10 @@ var require_lodash2 = __commonJS({
     function isObjectLike(value) {
       return !!value && typeof value == "object";
     }
-    function isNumber(value) {
+    function isNumber3(value) {
       return typeof value == "number" || isObjectLike(value) && objectToString.call(value) == numberTag;
     }
-    module.exports = isNumber;
+    module.exports = isNumber3;
   }
 });
 
@@ -252,7 +252,7 @@ function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, eff
   if (modifiers.includes("debounce")) {
     let idx = modifiers.indexOf("debounce");
     time = Number(modifiers[idx + 1].split("ms"));
-    if (!(0, import_lodash2.isNumeric)(time)) {
+    if (!(0, import_lodash2.default)(time)) {
       console.error(`x-scroll: Invalid debounce value: ${modifiers[idx + 1]}.`);
       return;
     }
@@ -275,7 +275,7 @@ function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, eff
       old_y_pos = new_y_pos;
     }
   };
-  window.addEventListener("scroll", (0, import_lodash.debounce)(handler, time));
+  window.addEventListener("scroll", (0, import_lodash.default)(handler, time));
   cleanup(() => window.removeEventListener("scroll", handler));
 }
 
@@ -298,7 +298,7 @@ function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater, effec
   let wait = 10;
   if (modifiers.includes("debounce")) {
     let nextModifier = modifiers[modifiers.indexOf("debounce") + 1];
-    if (nextModifier && (0, import_lodash4.isNumeric)(nextModifier.split("ms")[0])) {
+    if (nextModifier && (0, import_lodash4.default)(nextModifier.split("ms")[0])) {
       wait = Number(nextModifier.split("ms")[0]);
     } else {
       wait = 10;
@@ -307,7 +307,7 @@ function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater, effec
   }
   let wrapped_x_val = null;
   console.log(wait);
-  let resize_handler = (0, import_lodash3.debounce)(() => {
+  let resize_handler = (0, import_lodash3.default)(() => {
     let last_x_pos = 0;
     let just_wrapped = false;
     if (wrapped_x_val && wrapped_x_val > window.innerWidth) {
@@ -349,5 +349,10 @@ function src_default(Alpine) {
 // builds/module.js
 var module_default = src_default;
 export {
+  AlpineInterval,
+  AlpineLog,
+  AlpineScroll,
+  AlpineTimeout,
+  AlpineWrap,
   module_default as default
 };

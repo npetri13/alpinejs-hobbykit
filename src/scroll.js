@@ -1,5 +1,5 @@
-import { debounce } from "lodash.debounce"
-import { isNumeric } from "lodash.isnumber"
+import debounce from "lodash.debounce"
+import isNumber from "lodash.isnumber"
 
 // x-scroll:{up|down}{.debounce.{Int} } Evaluates every time the user scroll. It can distinguish between up or don scroll depending on the given modifiers. You can also add a debounce modifier which takes a timespan in milliseconds.
 export function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, effect, cleanup }) {
@@ -18,7 +18,7 @@ export function AlpineScroll(el, { value, expression, modifiers }, { evaluateLat
   {
     let idx = modifiers.indexOf('debounce')
     time = Number(modifiers[idx+1].split('ms'))
-    if (!isNumeric(time)) {
+    if (!isNumber(time)) {
       console.error(`x-scroll: Invalid debounce value: ${modifiers[idx+1]}.`)
       return
     }

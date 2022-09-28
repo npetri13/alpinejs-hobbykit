@@ -1,5 +1,5 @@
-import { debounce } from 'lodash.debounce'
-import { isNumeric } from 'lodash.isnumber'
+import debounce  from 'lodash.debounce'
+import isNumber from "lodash.isnumber"
 // x-wrap -> evaluate when a flex container is wrapped
 // x-wrap:class apply a class when a flex container is wrapped
 export function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater, effect, cleanup }) {
@@ -25,7 +25,7 @@ export function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater
   let wait = 10
   if (modifiers.includes('debounce')) {
     let nextModifier = modifiers[modifiers.indexOf('debounce')+1]
-    if (nextModifier && isNumeric(nextModifier.split('ms')[0])) {
+    if (nextModifier && isNumber(nextModifier.split('ms')[0])) {
       wait = Number(nextModifier.split('ms')[0])
     }
     else {

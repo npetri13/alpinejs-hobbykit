@@ -18,10 +18,28 @@ An **AlpineJS Plugin** with some useful extension.
 ```bash
 npm i @npetri/alpinejs-hobbykit
 ```
+#### As Plugin
 ```javascript
 import Alpine from 'alpinejs'
 import hobbykit from '@npetri/alpinejs-hobbykit'
 Alpine.plugin(hobbykit)
+
+window.Alpine = Alpine
+window.Alpine.start()
+```
+##### As Single Function
+All directives were available as single exports. You can use them to reduce code. Available functions:
+- AlpineTimeout
+- AlpineInterval
+- AlpineLog
+- AlpineScroll,
+- AlpineWrap
+
+```javascript
+import Alpine from 'alpinejs'
+import { AlpineLog } from '@npetri/alpinejs-hobbykit'
+
+Alpine.directive('log', AlpineLog)
 
 window.Alpine = Alpine
 window.Alpine.start()

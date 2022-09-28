@@ -18,10 +18,9 @@ An **AlpineJS Plugin** with some useful extension.
 ```bash
 npm i @npetri/alpinejs-hobbykit
 ```
-
 ```javascript
 import Alpine from 'alpinejs'
-import hobbykit from '@npetr/alpinejs-hobbykit'
+import hobbykit from '@npetri/alpinejs-hobbykit'
 Alpine.plugin(hobbykit)
 
 window.Alpine = Alpine

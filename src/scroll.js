@@ -1,13 +1,13 @@
-import { debounce } from "lodash"
-import { isNumeric } from "lodash-contrib"
+import { debounce } from "lodash.debounce"
+import { isNumeric } from "lodash.isnumber"
 
 // x-scroll:{up|down}{.debounce.{Int} } Evaluates every time the user scroll. It can distinguish between up or don scroll depending on the given modifiers. You can also add a debounce modifier which takes a timespan in milliseconds.
-export function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, effect, cleanup }) { 
- 
+export function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, effect, cleanup }) {
+
   let evaluate = evaluateLater(expression)
   const dir_up = value && value.includes('up')
   const dir_down = value && value.includes('down')
-  
+
   if ( !(value && (dir_down || dir_up)) ) {
     console.error(`x-scroll: Unkonwn value: '${value}' given.`)
     return

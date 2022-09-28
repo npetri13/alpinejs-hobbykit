@@ -1,5 +1,5 @@
-import { debounce } from 'lodash'
-import { isNumeric } from 'lodash-contrib'
+import { debounce } from 'lodash.debounce'
+import { isNumeric } from 'lodash.isnumber'
 // x-wrap -> evaluate when a flex container is wrapped
 // x-wrap:class apply a class when a flex container is wrapped
 export function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater, effect, cleanup }) {
@@ -51,19 +51,19 @@ export function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater
       el._x_wrap_evaluate_unwrap()
       wrapped_x_val = null
     }
-    
+
     for (let sib = el.firstElementChild; sib; sib = sib.nextElementSibling) {
       let rect = sib.getBoundingClientRect();
-      
+
       just_wrapped = rect.left < last_x_pos
       last_x_pos = rect.left
-      
+
       if (just_wrapped) {
         wrapped_x_val = window.innerWidth
         break
       }
     }
-    
+
     if (just_wrapped) { el._x_wrap_evaluate_wrap() }
   }, wait)
 

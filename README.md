@@ -115,7 +115,7 @@ Detects the browser scrolling and evaluates the given expression. A debounce mod
         margin-right: 10px;
       }
     </style>
-    <article class="boxes" x-data x-wrap="">
+    <article class="boxes" x-data x-wrap="console.log('wrapped...')">
       <div></div>
       <div></div>
       <div></div>

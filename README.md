@@ -32,7 +32,7 @@ All directives were available as single exports. You can use them to reduce code
 - AlpineTimeout
 - AlpineInterval
 - AlpineLog
-- AlpineScroll,
+- AlpineScroll
 - AlpineWrap
 
 ```javascript
@@ -71,9 +71,9 @@ Logs the given expression. You can use the well known log levels warn error etcp
 </section>
 ```
 ### x-scroll
-Detects the browser scrolling and evaluates the given expression. A debounce modifier can be added.
+Detects the browser scrolling and evaluates the given expression. A debounce or throttle modifier can be added. Remember, the scroll event is never triggered if a height of 100% or 100vh on the body tag was applied.
 ```html
-<section x-data>
+<section>
     <style>
         .fixed-scroll-indicator {
             display: inline-block;

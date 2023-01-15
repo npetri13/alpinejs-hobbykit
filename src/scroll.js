@@ -1,7 +1,8 @@
 import debounce from "lodash.debounce"
+import throttle from "lodash.throttle"
 import isNumber from "lodash.isnumber"
 
-// x-scroll:{up|down}{.debounce.{Int} } Evaluates every time the user scroll. It can distinguish between up or don scroll depending on the given modifiers. You can also add a debounce modifier which takes a timespan in milliseconds.
+// x-scroll:{up|down}{.debounce|throttle.{Int} } Evaluates every time the user scroll. It can distinguish between up or don scroll depending on the given modifiers. You can also add a debounce modifier which takes a timespan in milliseconds.
 export function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, effect, cleanup }) {
 
   let evaluate = evaluateLater(expression)
@@ -14,12 +15,15 @@ export function AlpineScroll(el, { value, expression, modifiers }, { evaluateLat
   }
 
   let time = 0
-  if (modifiers.includes('debounce'))
+  let isDebounce = modifiers.includes('debounce')
+  let isThrottle = modifiers.includes('throttle')
+
+  if ( isDebounce || isThrottle)
   {
-    let idx = modifiers.indexOf('debounce')
+    let idx = isDebounce ? modifiers.indexOf('debounce') : modifiers.indexOf('throttle')
     time = Number(modifiers[idx+1].split('ms'))
     if (!isNumber(time)) {
-      console.error(`x-scroll: Invalid debounce value: ${modifiers[idx+1]}.`)
+      console.error(`x-scroll: Invalid debounce/throttle value: ${modifiers[idx+1]}.`)
       return
     }
   }
@@ -27,7 +31,7 @@ export function AlpineScroll(el, { value, expression, modifiers }, { evaluateLat
   let old_y_pos = undefined;
   let new_y_pos = undefined;
 
-  let handler = () => {
+  let eval_pos = () => {
 
     if (!value) { evaluate() }
     else {
@@ -42,7 +46,10 @@ export function AlpineScroll(el, { value, expression, modifiers }, { evaluateLat
     }
   }
 
-  window.addEventListener("scroll", debounce(handler, time))
+  let handler = null
+  if (isDebounce || isThrottle) { handler = isDebounce? debounce(eval_pos, time) : throttle(eval_pos, time) }
+  if (!handler) { handler = eval_pos}
 
+  window.addEventListener("scroll", handler)
   cleanup(() => window.removeEventListener("scroll", handler))
 }

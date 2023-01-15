@@ -158,8 +158,156 @@ var require_lodash = __commonJS({
   }
 });
 
-// node_modules/lodash.isnumber/index.js
+// node_modules/lodash.throttle/index.js
 var require_lodash2 = __commonJS({
+  "node_modules/lodash.throttle/index.js"(exports, module2) {
+    var FUNC_ERROR_TEXT = "Expected a function";
+    var NAN = 0 / 0;
+    var symbolTag = "[object Symbol]";
+    var reTrim = /^\s+|\s+$/g;
+    var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+    var reIsBinary = /^0b[01]+$/i;
+    var reIsOctal = /^0o[0-7]+$/i;
+    var freeParseInt = parseInt;
+    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+    var root = freeGlobal || freeSelf || Function("return this")();
+    var objectProto = Object.prototype;
+    var objectToString = objectProto.toString;
+    var nativeMax = Math.max;
+    var nativeMin = Math.min;
+    var now = function() {
+      return root.Date.now();
+    };
+    function debounce3(func, wait, options) {
+      var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+      if (typeof func != "function") {
+        throw new TypeError(FUNC_ERROR_TEXT);
+      }
+      wait = toNumber(wait) || 0;
+      if (isObject(options)) {
+        leading = !!options.leading;
+        maxing = "maxWait" in options;
+        maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+        trailing = "trailing" in options ? !!options.trailing : trailing;
+      }
+      function invokeFunc(time) {
+        var args = lastArgs, thisArg = lastThis;
+        lastArgs = lastThis = void 0;
+        lastInvokeTime = time;
+        result = func.apply(thisArg, args);
+        return result;
+      }
+      function leadingEdge(time) {
+        lastInvokeTime = time;
+        timerId = setTimeout(timerExpired, wait);
+        return leading ? invokeFunc(time) : result;
+      }
+      function remainingWait(time) {
+        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, result2 = wait - timeSinceLastCall;
+        return maxing ? nativeMin(result2, maxWait - timeSinceLastInvoke) : result2;
+      }
+      function shouldInvoke(time) {
+        var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime;
+        return lastCallTime === void 0 || timeSinceLastCall >= wait || timeSinceLastCall < 0 || maxing && timeSinceLastInvoke >= maxWait;
+      }
+      function timerExpired() {
+        var time = now();
+        if (shouldInvoke(time)) {
+          return trailingEdge(time);
+        }
+        timerId = setTimeout(timerExpired, remainingWait(time));
+      }
+      function trailingEdge(time) {
+        timerId = void 0;
+        if (trailing && lastArgs) {
+          return invokeFunc(time);
+        }
+        lastArgs = lastThis = void 0;
+        return result;
+      }
+      function cancel() {
+        if (timerId !== void 0) {
+          clearTimeout(timerId);
+        }
+        lastInvokeTime = 0;
+        lastArgs = lastCallTime = lastThis = timerId = void 0;
+      }
+      function flush() {
+        return timerId === void 0 ? result : trailingEdge(now());
+      }
+      function debounced() {
+        var time = now(), isInvoking = shouldInvoke(time);
+        lastArgs = arguments;
+        lastThis = this;
+        lastCallTime = time;
+        if (isInvoking) {
+          if (timerId === void 0) {
+            return leadingEdge(lastCallTime);
+          }
+          if (maxing) {
+            timerId = setTimeout(timerExpired, wait);
+            return invokeFunc(lastCallTime);
+          }
+        }
+        if (timerId === void 0) {
+          timerId = setTimeout(timerExpired, wait);
+        }
+        return result;
+      }
+      debounced.cancel = cancel;
+      debounced.flush = flush;
+      return debounced;
+    }
+    function throttle2(func, wait, options) {
+      var leading = true, trailing = true;
+      if (typeof func != "function") {
+        throw new TypeError(FUNC_ERROR_TEXT);
+      }
+      if (isObject(options)) {
+        leading = "leading" in options ? !!options.leading : leading;
+        trailing = "trailing" in options ? !!options.trailing : trailing;
+      }
+      return debounce3(func, wait, {
+        "leading": leading,
+        "maxWait": wait,
+        "trailing": trailing
+      });
+    }
+    function isObject(value) {
+      var type = typeof value;
+      return !!value && (type == "object" || type == "function");
+    }
+    function isObjectLike(value) {
+      return !!value && typeof value == "object";
+    }
+    function isSymbol(value) {
+      return typeof value == "symbol" || isObjectLike(value) && objectToString.call(value) == symbolTag;
+    }
+    function toNumber(value) {
+      if (typeof value == "number") {
+        return value;
+      }
+      if (isSymbol(value)) {
+        return NAN;
+      }
+      if (isObject(value)) {
+        var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+        value = isObject(other) ? other + "" : other;
+      }
+      if (typeof value != "string") {
+        return value === 0 ? value : +value;
+      }
+      value = value.replace(reTrim, "");
+      var isBinary = reIsBinary.test(value);
+      return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+    }
+    module2.exports = throttle2;
+  }
+});
+
+// node_modules/lodash.isnumber/index.js
+var require_lodash3 = __commonJS({
   "node_modules/lodash.isnumber/index.js"(exports, module2) {
     var numberTag = "[object Number]";
     var objectProto = Object.prototype;
@@ -246,7 +394,6 @@ function AlpineLog(el, obj, { evaluateLater, effect, cleanup }) {
       console.debug(expression);
       break;
     default:
-      console.error(`x-log: Unkown modifier was given. log will be used.`);
       console.log(expression);
       break;
   }
@@ -255,6 +402,7 @@ function AlpineLog(el, obj, { evaluateLater, effect, cleanup }) {
 // src/scroll.js
 var import_lodash = __toModule(require_lodash());
 var import_lodash2 = __toModule(require_lodash2());
+var import_lodash3 = __toModule(require_lodash3());
 function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, effect, cleanup }) {
   let evaluate = evaluateLater(expression);
   const dir_up = value && value.includes("up");
@@ -264,17 +412,19 @@ function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, eff
     return;
   }
   let time = 0;
-  if (modifiers.includes("debounce")) {
-    let idx = modifiers.indexOf("debounce");
+  let isDebounce = modifiers.includes("debounce");
+  let isThrottle = modifiers.includes("throttle");
+  if (isDebounce || isThrottle) {
+    let idx = isDebounce ? modifiers.indexOf("debounce") : modifiers.indexOf("throttle");
     time = Number(modifiers[idx + 1].split("ms"));
-    if (!(0, import_lodash2.default)(time)) {
-      console.error(`x-scroll: Invalid debounce value: ${modifiers[idx + 1]}.`);
+    if (!(0, import_lodash3.default)(time)) {
+      console.error(`x-scroll: Invalid debounce/throttle value: ${modifiers[idx + 1]}.`);
       return;
     }
   }
   let old_y_pos = void 0;
   let new_y_pos = void 0;
-  let handler = () => {
+  let eval_pos = () => {
     if (!value) {
       evaluate();
     } else {
@@ -290,13 +440,20 @@ function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, eff
       old_y_pos = new_y_pos;
     }
   };
-  window.addEventListener("scroll", (0, import_lodash.default)(handler, time));
+  let handler = null;
+  if (isDebounce || isThrottle) {
+    handler = isDebounce ? (0, import_lodash.default)(eval_pos, time) : (0, import_lodash2.default)(eval_pos, time);
+  }
+  if (!handler) {
+    handler = eval_pos;
+  }
+  window.addEventListener("scroll", handler);
   cleanup(() => window.removeEventListener("scroll", handler));
 }
 
 // src/wrap.js
-var import_lodash3 = __toModule(require_lodash());
-var import_lodash4 = __toModule(require_lodash2());
+var import_lodash4 = __toModule(require_lodash());
+var import_lodash5 = __toModule(require_lodash3());
 function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater, effect, cleanup }) {
   console.info("%cx-wrap: This derective is still experimental. Checkout documentation on github.", "color: white;background-color: #FFBF00; font-weight: bold; padding-left: 5px; padding-right: 5px;");
   let styles = window.getComputedStyle(el);
@@ -313,7 +470,7 @@ function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater, effec
   let wait = 10;
   if (modifiers.includes("debounce")) {
     let nextModifier = modifiers[modifiers.indexOf("debounce") + 1];
-    if (nextModifier && (0, import_lodash4.default)(nextModifier.split("ms")[0])) {
+    if (nextModifier && (0, import_lodash5.default)(nextModifier.split("ms")[0])) {
       wait = Number(nextModifier.split("ms")[0]);
     } else {
       wait = 10;
@@ -322,7 +479,7 @@ function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater, effec
   }
   let wrapped_x_val = null;
   console.log(wait);
-  let resize_handler = (0, import_lodash3.default)(() => {
+  let resize_handler = (0, import_lodash4.default)(() => {
     let last_x_pos = 0;
     let just_wrapped = false;
     if (wrapped_x_val && wrapped_x_val > window.innerWidth) {

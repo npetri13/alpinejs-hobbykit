@@ -41,7 +41,7 @@ var require_lodash = __commonJS({
     var now = function() {
       return root.Date.now();
     };
-    function debounce3(func, wait, options) {
+    function debounce2(func, wait, options) {
       var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
       if (typeof func != "function") {
         throw new TypeError(FUNC_ERROR_TEXT);
@@ -149,7 +149,7 @@ var require_lodash = __commonJS({
       var isBinary = reIsBinary.test(value);
       return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
     }
-    module.exports = debounce3;
+    module.exports = debounce2;
   }
 });
 
@@ -174,7 +174,7 @@ var require_lodash2 = __commonJS({
     var now = function() {
       return root.Date.now();
     };
-    function debounce3(func, wait, options) {
+    function debounce2(func, wait, options) {
       var lastArgs, lastThis, maxWait, result, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
       if (typeof func != "function") {
         throw new TypeError(FUNC_ERROR_TEXT);
@@ -263,7 +263,7 @@ var require_lodash2 = __commonJS({
         leading = "leading" in options ? !!options.leading : leading;
         trailing = "trailing" in options ? !!options.trailing : trailing;
       }
-      return debounce3(func, wait, {
+      return debounce2(func, wait, {
         "leading": leading,
         "maxWait": wait,
         "trailing": trailing
@@ -310,15 +310,15 @@ var require_lodash3 = __commonJS({
     function isObjectLike(value) {
       return !!value && typeof value == "object";
     }
-    function isNumber3(value) {
+    function isNumber2(value) {
       return typeof value == "number" || isObjectLike(value) && objectToString.call(value) == numberTag;
     }
-    module.exports = isNumber3;
+    module.exports = isNumber2;
   }
 });
 
 // src/timeout.js
-function AlpineTimeout(el, { value, modifiers, expression }, { evaluateLater, effect, cleanup }) {
+function AlpineTimeout(el, { modifiers, expression }, { evaluateLater, cleanup }) {
   if (!modifiers.length) {
     console.error(`x-timeout: Missing arguments.`);
     return;
@@ -336,7 +336,7 @@ function AlpineTimeout(el, { value, modifiers, expression }, { evaluateLater, ef
 }
 
 // src/interval.js
-function AlpineInterval(el, { value, modifiers, expression }, { evaluateLater, effect, cleanup }) {
+function AlpineInterval(el, { modifiers, expression }, { evaluateLater, cleanup }) {
   if (!modifiers.length) {
     console.error(`x-interval: Missing arguments.`);
     return;
@@ -354,34 +354,38 @@ function AlpineInterval(el, { value, modifiers, expression }, { evaluateLater, e
 }
 
 // src/log.js
-function AlpineLog(el, obj, { evaluateLater, effect, cleanup }) {
-  let { value, expression, modifiers } = obj;
+function AlpineLog(el, { expression, modifiers }, { evaluateLater, effect }) {
+  let logThis = evaluateLater(expression);
   if (modifiers.length > 1) {
     console.error(`x-log: One modifier expected but ${modifiers.length} was given. Additional modifiers will be ignored.`);
     console.log(expression);
     return;
   }
-  switch (modifiers[0]) {
-    case "":
-    case "log":
-      console.log(expression);
-      break;
-    case "info":
-      console.info(expression);
-      break;
-    case "warn":
-      console.warn(expression);
-      break;
-    case "error":
-      console.error(expression);
-      break;
-    case "debug":
-      console.debug(expression);
-      break;
-    default:
-      console.log(expression);
-      break;
-  }
+  effect(() => {
+    logThis((ex) => {
+      switch (modifiers[0]) {
+        case "":
+        case "log":
+          console.log(ex);
+          break;
+        case "info":
+          console.info(ex);
+          break;
+        case "warn":
+          console.warn(ex);
+          break;
+        case "error":
+          console.error(ex);
+          break;
+        case "debug":
+          console.debug(ex);
+          break;
+        default:
+          console.log(ex);
+          break;
+      }
+    });
+  });
 }
 
 // src/scroll.js
@@ -436,71 +440,12 @@ function AlpineScroll(el, { value, expression, modifiers }, { evaluateLater, eff
   cleanup(() => window.removeEventListener("scroll", handler));
 }
 
-// src/wrap.js
-var import_lodash4 = __toModule(require_lodash());
-var import_lodash5 = __toModule(require_lodash3());
-function AlpineWrap(el, { value, modifiers, expression }, { evaluateLater, effect, cleanup }) {
-  console.info("%cx-wrap: This derective is still experimental. Checkout documentation on github.", "color: white;background-color: #FFBF00; font-weight: bold; padding-left: 5px; padding-right: 5px;");
-  let styles = window.getComputedStyle(el);
-  if (!styles.getPropertyValue("display").includes("flex") || styles.getPropertyValue("flex-direction") !== "row") {
-    console.error("x-wrap: The wrap directive only applies to flex-row elements, otherwise results are unexpected.");
-  }
-  if (value.includes("leave")) {
-    el._x_wrap_evaluate_unwrap = expression && evaluateLater(expression);
-  } else if (value.includes("enter")) {
-    el._x_wrap_evaluate_wrap = expression && evaluateLater(expression);
-  } else {
-    el._x_wrap_evaluate_wrap = expression && evaluateLater(expression);
-  }
-  let wait = 10;
-  if (modifiers.includes("debounce")) {
-    let nextModifier = modifiers[modifiers.indexOf("debounce") + 1];
-    if (nextModifier && (0, import_lodash5.default)(nextModifier.split("ms")[0])) {
-      wait = Number(nextModifier.split("ms")[0]);
-    } else {
-      wait = 10;
-      console.error(`x-wrap: Unexpected debounce value. ${wait}ms will be applied.`);
-    }
-  }
-  let wrapped_x_val = null;
-  console.log(wait);
-  let resize_handler = (0, import_lodash4.default)(() => {
-    let last_x_pos = 0;
-    let just_wrapped = false;
-    if (wrapped_x_val && wrapped_x_val > window.innerWidth) {
-      return;
-    } else if (wrapped_x_val && wrapped_x_val < window.innerWidth) {
-      el._x_wrap_evaluate_unwrap();
-      wrapped_x_val = null;
-    }
-    for (let sib = el.firstElementChild; sib; sib = sib.nextElementSibling) {
-      let rect = sib.getBoundingClientRect();
-      just_wrapped = rect.left < last_x_pos;
-      last_x_pos = rect.left;
-      if (just_wrapped) {
-        wrapped_x_val = window.innerWidth;
-        break;
-      }
-    }
-    if (just_wrapped) {
-      el._x_wrap_evaluate_wrap();
-    }
-  }, wait);
-  resize_handler();
-  if (!el._x_wrap_listener) {
-    el._x_wrap_listener = true;
-    window.addEventListener("resize", resize_handler);
-  }
-  cleanup(() => window.removeEventListener("resize", resize_handler));
-}
-
 // src/index.js
 function src_default(Alpine) {
   Alpine.directive("timeout", AlpineTimeout);
   Alpine.directive("interval", AlpineInterval);
   Alpine.directive("log", AlpineLog);
   Alpine.directive("scroll", AlpineScroll);
-  Alpine.directive("wrap", AlpineWrap);
 }
 
 // builds/module.js
@@ -510,6 +455,5 @@ export {
   AlpineLog,
   AlpineScroll,
   AlpineTimeout,
-  AlpineWrap,
   module_default as default
 };

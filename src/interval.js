@@ -1,6 +1,6 @@
 // x-interval.{Number}: Evaluates every timeinterval given by Number in ms.
-export function AlpineInterval(el, { value, modifiers, expression }, { evaluateLater, effect, cleanup }) { 
-  
+export function AlpineInterval(el, { modifiers, expression }, { evaluateLater, cleanup }) {
+
   if (!modifiers.length) { console.error(`x-interval: Missing arguments.`); return; }
 
   if (modifiers.length > 1) {

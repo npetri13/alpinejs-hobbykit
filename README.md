@@ -33,12 +33,12 @@ All directives were available as single exports. You can use them to reduce code
 - AlpineInterval
 - AlpineLog
 - AlpineScroll
-- AlpineWrap
 
 ```javascript
 import Alpine from 'alpinejs'
-import { AlpineLog } from '@npetri/alpinejs-hobbykit'
+import { AlpineInterval, AlpineLog } from '@npetri/alpinejs-hobbykit'
 
+Alpine.directive('interval', AlpineInterval)
 Alpine.directive('log', AlpineLog)
 
 window.Alpine = Alpine
@@ -62,12 +62,17 @@ Evaluate the given expression after the given time.
 ### x-log
 Logs the given expression. You can use the well known log levels warn error etcpp.
 ```html
-<section x-data>
-    <span x-log="A log message via x-log."></span>
-    <span x-log.warn="A warn message via x-log."></span>
-    <span x-log.error="An error message via x-log."></span>
-    <span x-log.info="An info message via x-log."></span>
-    <span x-log.jhkj="A message via x-log invoked as fallback."></span>
+<section x-data="{
+    log: 'A log message via x-log.',
+    error: 'An error message via x-log.',
+    info: 'An info message via x-log.',
+    def: 'A message via x-log invoked as fallback.'
+    }">
+    <span x-log="log"></span>
+    <span x-log.warn="() => { return 'A warn message via x-log.' }"></span>
+    <span x-log.error="error"></span>
+    <span x-log.info="info"></span>
+    <span x-log.jhkj="def"></span>
 </section>
 ```
 ### x-scroll
@@ -95,33 +100,7 @@ Detects the browser scrolling and evaluates the given expression. A debounce or 
 
     <div class="fixed-scroll-indicator" x-data="compScroll">
         <span x-show="isScrollUp" x-scroll:up.debounce.750="isScrollUp=true; isScrollDown=false;">Up</span>
-        <span x-show="isScrollDown" x-scroll:down.debounce.750="isScrollDown=true; isScrollUp=false;">Down</span>
+        <span x-show="isScrollDown" x-scroll:down.throttle.750="isScrollDown=true; isScrollUp=false;">Down</span>
     </div>
-</section>
-```
-### x-wrap
-**Experimantal:** Evaluates if a flex item within a flex container is wrapped.
-```html
-<section>
-    <style>
-      .boxes {
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .boxes div {
-        width: 150px;
-        height: 20px;
-        background-color: aqua;
-        margin-right: 10px;
-      }
-    </style>
-    <article class="boxes" x-data x-wrap="console.log('wrapped...')">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </article>
 </section>
 ```

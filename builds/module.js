@@ -3,8 +3,7 @@ import {
     AlpineTimeout,
     AlpineInterval,
     AlpineLog,
-    AlpineScroll,
-    AlpineWrap
+    AlpineScroll
   } from '../src/index.js'
 
 export default plugin
@@ -13,6 +12,5 @@ export {
     AlpineTimeout,
     AlpineInterval,
     AlpineLog,
-    AlpineScroll,
-    AlpineWrap
+    AlpineScroll
   }

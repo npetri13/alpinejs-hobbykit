@@ -1,5 +1,5 @@
 // x-timeout.{Number}: Evaluates after a timeout of the given number in ms.
-export function AlpineTimeout(el, { value, modifiers, expression }, { evaluateLater, effect, cleanup }) { 
+export function AlpineTimeout(el, { modifiers, expression }, { evaluateLater, cleanup }) {
 
   if (!modifiers.length) { console.error(`x-timeout: Missing arguments.`); return; }
 
